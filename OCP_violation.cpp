@@ -1,4 +1,4 @@
-//TODO: Refactored to adhere to the Single Responsibility Principle (SRP)
+// A class shoud be open for extension but closed for modification.
 
 /*
 Class Diagram:
@@ -16,6 +16,10 @@ printInvoice() : void
 
 DatabaseSaver:
 saveToDatabase() : void
+
+
+We modified the DatabaseSaver class to add a new method saveToMongoDB without changing any existing code
+which violates the OCP principle.
 
 */
 
@@ -79,6 +83,14 @@ class DatabaseSaver{
         // Simulate saving to database
         cout << "Saving shopping cart to database..." << endl;
     }
+    void saveToMongoDB(){
+        // Simulate saving to database
+        cout << "Saving shopping cart to MongoDB..." << endl;
+    }
+    void saveToFile(){
+        // Simulate saving to database
+        cout << "Saving shopping cart to File" << endl;
+    }
 };
 
 int main(){
@@ -86,9 +98,10 @@ int main(){
     ShoppingCart* cart = new ShoppingCart();
     cart->addProduct(new Product("Laptop", 999.99));
     cart->addProduct(new Product("Mouse", 49.99));
-    InvoicePrinter* printer = new InvoicePrinter(cart);
-    printer->printInvoice();
+
     DatabaseSaver* dbSaver = new DatabaseSaver(cart) ;
     dbSaver->saveToDatabase();
+    dbSaver->saveToMongoDB();
+    dbSaver->saveToFile();
     return 0;
 }
