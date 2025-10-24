@@ -1,5 +1,11 @@
 
-//#TODO:Good Way of Handling:
+/*#TODO:Good Way of Handling:
+    Guidelines to adhere to LSP Rule:
+    1.> Signature RUle
+    2.> Property Rule
+    3.> Method Rule
+
+*/
 
 
 /*
