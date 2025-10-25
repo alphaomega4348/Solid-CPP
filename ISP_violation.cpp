@@ -2,38 +2,31 @@
  Client should not be forced to implement methods they do not use.
 
 <<abstract>>
-2d-Shape: 
-    + draw() : void
-    + resize() : void
-    + calculateArea() : double
-
-<<abstract>>
-3d-Shape:
+Shape: 
     + draw() : void
     + resize() : void
     + calculateArea() : double
     + calculateVolume() : double
 
-
-Square:         (extends 2d-Shape)
+Square:         (extends Shape)
     + draw() : void
     + resize() : void
     + calculateArea() : double
     + calculateVolume() : inValidOperationException
 
-Rectangle:       (extends 2d-Shape)
+Rectangle:       (extends Shape)
     + draw() : void
     + resize() : void
     + calculateArea() : double
     + calculateVolume() : inValidOperationException
 
-Cube:          (extends 3d-Shape)
+Cube:          (extends Shape)
     + draw() : void
     + resize() : void
     + calculateArea() : double
     + calculateVolume() : double
 
-Sphere:        (extends 3d-Shape)
+Sphere:        (extends Shape)
     + draw() : void
     + resize() : void
     + calculateArea() : double
@@ -42,30 +35,20 @@ Sphere:        (extends 3d-Shape)
 
 #include <iostream>
 #include <stdexcept>
-#include <cmath>
 using namespace std;
 
-// Base Interface for 2D Shapes
-class TwoDimensionalShape {
+// Abstract Shape class
+class Shape {
 public:
     virtual void draw() = 0;
     virtual void resize() = 0;
     virtual double calculateArea() = 0;
-    virtual ~TwoDimensionalShape() {}
+    virtual double calculateVolume() = 0; // Irrelevant for 2D shapes
+    virtual ~Shape() {}
 };
 
-// Base Interface for 3D Shapes
-class ThreeDimensionalShape {
-public:
-    virtual void draw() = 0;
-    virtual void resize() = 0;
-    virtual double calculateArea() = 0;
-    virtual double calculateVolume() = 0;
-    virtual ~ThreeDimensionalShape() {}
-};
-
-// Square Class (Implements TwoDimensionalShape)
-class Square : public TwoDimensionalShape {
+// Square class (2D shape)
+class Square : public Shape {
 private:
     double side;
 public:
@@ -79,10 +62,13 @@ public:
     double calculateArea() override {
         return side * side;
     }
+    double calculateVolume() override {
+        throw runtime_error("Invalid operation: Square does not have a volume");
+    }
 };
 
-// Rectangle Class (Implements TwoDimensionalShape)
-class Rectangle : public TwoDimensionalShape {
+// Rectangle class (2D shape)
+class Rectangle : public Shape {
 private:
     double length, width;
 public:
@@ -96,10 +82,13 @@ public:
     double calculateArea() override {
         return length * width;
     }
+    double calculateVolume() override {
+        throw runtime_error("Invalid operation: Rectangle does not have a volume");
+    }
 };
 
-// Cube Class (Implements ThreeDimensionalShape)
-class Cube : public ThreeDimensionalShape {
+// Cube class (3D shape)
+class Cube : public Shape {
 private:
     double side;
 public:
@@ -118,8 +107,8 @@ public:
     }
 };
 
-// Sphere Class (Implements ThreeDimensionalShape)
-class Sphere : public ThreeDimensionalShape {
+// Sphere class (3D shape)
+class Sphere : public Shape {
 private:
     double radius;
 public:
@@ -131,27 +120,36 @@ public:
         cout << "Resizing the Sphere" << endl;
     }
     double calculateArea() override {
-        return 4 * M_PI * radius * radius;
+        return 4 * 3.14159 * radius * radius;
     }
     double calculateVolume() override {
-        return (4.0 / 3.0) * M_PI * radius * radius * radius;
+        return (4.0 / 3.0) * 3.14159 * radius * radius * radius;
     }
 };
 
 int main() {
-    // 2D Shapes
-    TwoDimensionalShape* square = new Square(5);
-    TwoDimensionalShape* rectangle = new Rectangle(4, 6);
+    // Create shapes
+    Shape* square = new Square(5);
+    Shape* rectangle = new Rectangle(4, 6);
+    Shape* cube = new Cube(3);
+    Shape* sphere = new Sphere(4);
 
+    // Demonstrate functionality
     square->draw();
     cout << "Square Area: " << square->calculateArea() << endl;
+    try {
+        cout << "Square Volume: " << square->calculateVolume() << endl;
+    } catch (const runtime_error& e) {
+        cout << e.what() << endl;
+    }
 
     rectangle->draw();
     cout << "Rectangle Area: " << rectangle->calculateArea() << endl;
-
-    // 3D Shapes
-    ThreeDimensionalShape* cube = new Cube(3);
-    ThreeDimensionalShape* sphere = new Sphere(4);
+    try {
+        cout << "Rectangle Volume: " << rectangle->calculateVolume() << endl;
+    } catch (const runtime_error& e) {
+        cout << e.what() << endl;
+    }
 
     cube->draw();
     cout << "Cube Area: " << cube->calculateArea() << endl;
